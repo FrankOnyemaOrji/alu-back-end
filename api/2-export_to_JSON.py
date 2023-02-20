@@ -15,13 +15,13 @@ if __name__ == "__main__":
     user_info = requests.request("GET", url).json()
     todo_info = requests.request("GET", todo).json()
 
-    employee_name = user_info.get("name")
+    employee_username = user_info.get("username")
 
-    todo_info_sorted = [
-        dict(zip(["task", "completed", "username"], 
-        [task.get["title"], task.get["completed"], employee_name]))
+    todos_info_sorted = [
+        dict(zip(["task", "completed", "username"],
+                 [task["title"], task["completed"], employee_username]))
         for task in todo_info]
 
-    user = {str(employee_id): todo_info_sorted}
+    user_dict = {str(employee_id): todos_info_sorted}
     with open(str(employee_id) + '.json', "w") as f:
-        f.write(json.dumps(user))
+        f.write(json.dumps(user_dict))

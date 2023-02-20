@@ -10,7 +10,8 @@ if __name__ == "__main__":
     employee_id = sys.argv[1]
     url = "https://jsonplaceholder.typicode.com/users/{}".format(employee_id)
 
-    todo = "https://jsonplaceholder.typicode.com/todos?userId={}".format(employee_id)
+    todo = "https://jsonplaceholder.typicode.com/todos?userId={}"
+    todo = todo.format(employee_id)
 
     user_info = requests.request("GET", url).json()
     todo_info = requests.request("GET", todo).json()
