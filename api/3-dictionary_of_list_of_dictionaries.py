@@ -4,35 +4,39 @@
 import json
 import requests
 
-def get_employee_data(employee_id):
-    """ Function"""
-    url = "https://jsonplaceholder.typicode.com/users/{}".format(employee_id)
-    todo = "https://jsonplaceholder.typicode.com/todos?userId={}"
-    todo = todo.format(employee_id)
 
-    todo_info = requests.request("GET", todo).json()
-    user_info = requests.request("GET", url).json()
-    employee_username = user_info.get("username")
+def get_employee_task(employee_id):
+    """Doc"""
+    url = "https://jsonplaceholder.typicode.com/users/{}" \
+        .format(employee_id)
+
+    user_info = requests.request('GET', url).json()
+
+    employee_username = user_info["username"]
+    todo = "https://jsonplaceholder.typicode.com/users/{}/todos"
+    todo = todo.format(employee_id)
+    todos_info = requests.request('GET', todo).json()
     return [
         dict(zip(["task", "completed", "username"],
                  [task["title"], task["completed"], employee_username]))
-        for task in todo_info]
-
-    
-
-    
-
-def get_all_employee_ids():
-    """ Function to gather all employee ids """
-    url = "https://jsonplaceholder.typicode.com/users"
-    user_info = requests.request("GET", url).json()
-    id = list(map(lambda x: x.get("id"), user_info))
-    return id
+        for task in todos_info]
 
 
-if __name__ == "__main__":
-    all_employee_ids = get_all_employee_ids()
-    for employee_id in all_employee_ids:
-        user = get_employee_data(employee_id)
-        with open(str(employee_id) + '.json', "w") as f:
-            f.write(json.dumps(user))
+def get_employee_ids():
+    """Doc"""
+    user = "https://jsonplaceholder.typicode.com/users/"
+
+    users_info = requests.request('GET', user).json()
+    ids = list(map(lambda user: user["id"], users_info))
+    return ids
+
+
+if __name__ == '__main__':
+
+    employee_id = get_employee_ids()
+
+    with open('todo_all_employees.json', "w") as f:
+        all_users = {}
+        for employee_id in employee_id:
+            all_users[str(employee_id)] = get_employee_task(employee_id)
+        f.write(json.dumps(all_users))
